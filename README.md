@@ -88,22 +88,49 @@ Other features include:
 | Runtime dependencies | None | None |
 | Size | ~580 KB | ~110 KB |
 
-<!--
+---
+
 ## Screenshots
+
+### macOS
 
 <table>
   <tr>
-    <td align="center" width="50%">
-      <img src="assets/screenshots/settings-mac.webp" alt="The macOS popover">
-      <br><sub>macOS</sub>
+    <td align="center" valign="top" width="50%">
+      <img src="assets/screenshots/macos-inputs.png" alt="The Bivio popover under the menu bar icon, dark theme: the monitor name and ID at the top, four input tiles and the shortcut reminder">
+      <br><sub>Inputs</sub>
     </td>
-    <td align="center" width="50%">
-      <img src="assets/screenshots/settings-windows.webp" alt="The Windows settings window">
-      <br><sub>Windows</sub>
+    <td align="center" valign="top" width="50%">
+      <img src="assets/screenshots/macos-settings.png" alt="The settings page of the popover: monitor, menu inputs with their codes, and the keyboard shortcut with Liquid Glass modifier buttons">
+      <br><sub>Settings</sub>
     </td>
   </tr>
 </table>
--->
+
+### Windows
+
+<table>
+  <tr>
+    <td align="center" valign="top" width="50%">
+      <img src="assets/screenshots/windows-general.png" alt="The Windows settings window, General page: monitor, language, start with Windows and settings file cards">
+      <br><sub>General</sub>
+    </td>
+    <td align="center" valign="top" width="50%">
+      <img src="assets/screenshots/windows-inputs.png" alt="The Inputs page: one card per input with its name and input code, plus an empty row to add one">
+      <br><sub>Inputs</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="50%">
+      <img src="assets/screenshots/windows-shortcut.png" alt="The Shortcut page: Ctrl, Alt, Shift and Win toggle buttons with the key, and the input the shortcut switches to">
+      <br><sub>Shortcut</sub>
+    </td>
+    <td align="center" valign="top" width="50%">
+      <img src="assets/screenshots/windows-tray-menu.png" alt="The notification-area menu: the monitor, the inputs, the shortcut reminder, Settings, Start with Windows and Quit">
+      <br><sub>Notification-area menu</sub>
+    </td>
+  </tr>
+</table>
 
 ---
 
@@ -260,6 +287,7 @@ The two applications share the same configuration format and behaviour, but each
 assets/
   icon.svg              the Bivio icon, used here and for Windows
   icon-macos.svg        the same icon on a light tile, for the macOS app
+  screenshots/          the images of this README
 
 mac/
   main.swift            menu bar app, global shortcut, command line
