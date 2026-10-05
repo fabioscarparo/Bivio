@@ -1,0 +1,35 @@
+// Resources of Bivio.exe, compiled by windres (see Makefile).
+#include <windows.h>
+
+// Icon 1: the executable's icon in Explorer, and the tray icon (loaded by AddTrayIcon in bivio.c).
+// Generated from assets/icon.svg by `make icons`.
+1 ICON "bivio.ico"
+
+// Application manifest: common controls v6, DPI awareness, Windows 10/11 compatibility.
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "bivio.manifest"
+
+// Version shown in the file's Properties. Keep in sync with APP_VERSION in settings.c and with
+// CFBundleShortVersionString in mac/Info.plist.
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION 1,0,0,0
+PRODUCTVERSION 1,0,0,0
+FILEOS VOS_NT_WINDOWS32
+FILETYPE VFT_APP
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "040904B0"  // US English, Unicode
+    BEGIN
+      VALUE "FileDescription", "Bivio - monitor input switcher"
+      VALUE "FileVersion", "1.0.0"
+      VALUE "LegalCopyright", "Copyright (c) 2026 Fabio Scarparo. MIT License."
+      VALUE "OriginalFilename", "Bivio.exe"
+      VALUE "ProductName", "Bivio"
+      VALUE "ProductVersion", "1.0.0"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x409, 1200
+  END
+END

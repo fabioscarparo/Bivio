@@ -1,0 +1,5 @@
+# Build output (make mac / make win / make preview)
+build/
+
+# macOS Finder metadata
+.DS_Store
