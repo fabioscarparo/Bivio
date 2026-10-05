@@ -5,8 +5,8 @@
 <h1 align="center">Bivio</h1>
 
 <p align="center">
-  <strong>Tiny native input switcher for a monitor shared by several computers:<br>
-  one click or one shortcut instead of the monitor's joystick.</strong>
+  <strong>Tiny native input switcher for a monitor shared across multiple computers.<br>
+  Switch inputs with a single click or keyboard shortcut. No more reaching for the monitor joystick.</strong>
 </p>
 
 <p align="center">
