@@ -4,13 +4,14 @@
 #   make win      build/Bivio.exe  (MinGW-w64 cross compiler: brew install mingw-w64)
 #   make all      both
 #   make preview  renders the macOS popover pages to build/popover-*.png, to check the layout
-#   make icons    regenerates mac/AppIcon.icns and win/bivio.ico from the SVGs in assets/
+#   make icons    regenerates mac/AppIcon.icns and win/bivio.ico from assets/ (needs Icon Composer)
 #   make clean    removes build/
 
 APP     := build/Bivio.app
 EXE     := build/Bivio.exe
 WIN_CC  := x86_64-w64-mingw32-gcc
 WINDRES := x86_64-w64-mingw32-windres
+ICTOOL  := "/Applications/Icon Composer.app/Contents/Executables/ictool"
 
 .PHONY: all mac win preview icons clean
 
@@ -46,13 +47,16 @@ preview:
 		$(filter-out mac/main.swift,$(wildcard mac/*.swift)) tools/render_settings/main.swift -o build/render_settings
 	build/render_settings build
 
-# mac/AppIcon.icns comes from assets/icon-macos.svg (icon on a light tile, macOS grid);
-# win/bivio.ico from assets/icon.svg (the bare icon). Both outputs are committed.
+# mac/AppIcon.icns comes from assets/Bivio.icon, the Icon Composer document, rendered by its ictool
+# (Default appearance: a plain .icns has no dark or tinted variants); win/bivio.ico from assets/icon.svg
+# (the bare icon). Both outputs are committed.
 icons:
 	mkdir -p build
+	$(ICTOOL) assets/Bivio.icon --export-image --output-file build/Bivio-macOS.png \
+		--platform macOS --rendition Default --width 1024 --height 1024 --scale 1
 	swiftc -O tools/make_icons/main.swift -o build/make_icons
 	rm -rf build/AppIcon.iconset
-	build/make_icons assets/icon-macos.svg build/AppIcon.iconset assets/icon.svg win/bivio.ico
+	build/make_icons build/Bivio-macOS.png build/AppIcon.iconset assets/icon.svg win/bivio.ico
 	iconutil -c icns build/AppIcon.iconset -o mac/AppIcon.icns
 
 clean:

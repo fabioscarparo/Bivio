@@ -1,4 +1,4 @@
-// Dev tool: renders the macOS icon set (from the tile version) and the Windows .ico (from the bare icon).
+// Dev tool: renders the macOS icon set (from the Icon Composer render) and the Windows .ico (from the bare icon).
 // Build and run: make icons
 import AppKit
 
@@ -6,32 +6,42 @@ let arguments = CommandLine.arguments
 guard arguments.count == 5,
       let macImage = NSImage(contentsOf: URL(fileURLWithPath: arguments[1])),
       let windowsImage = NSImage(contentsOf: URL(fileURLWithPath: arguments[3])) else {
-    print("usage: make_icons <icon-macos.svg> <AppIcon.iconset dir> <icon.svg> <icon.ico>")
+    print("usage: make_icons <macOS render.png> <AppIcon.iconset dir> <icon.svg> <icon.ico>")
     exit(2)
 }
 
-/// `zoom` enlarges the drawing around its center, to fill more of the canvas.
-func render(_ image: NSImage, _ size: Int, zoom: CGFloat = 1) -> NSBitmapImageRep {
+/// `zoom` scales the drawing around its center; `shadow` adds the drop shadow of the macOS icon grid.
+func render(_ image: NSImage, _ size: Int, zoom: CGFloat = 1, shadow: Bool = false) -> NSBitmapImageRep {
     let rep = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: size, pixelsHigh: size, bitsPerSample: 8,
                                samplesPerPixel: 4, hasAlpha: true, isPlanar: false, colorSpaceName: .deviceRGB,
                                bytesPerRow: size * 4, bitsPerPixel: 32)!
     NSGraphicsContext.saveGraphicsState()
     NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: rep)
     NSGraphicsContext.current?.imageInterpolation = .high
+    if shadow {
+        let dropShadow = NSShadow()
+        dropShadow.shadowOffset = NSSize(width: 0, height: -0.012 * CGFloat(size))
+        dropShadow.shadowBlurRadius = 0.03 * CGFloat(size)
+        dropShadow.shadowColor = NSColor.black.withAlphaComponent(0.3)
+        dropShadow.set()
+    }
     let side = CGFloat(size) * zoom, origin = (CGFloat(size) - side) / 2
-    image.draw(in: NSRect(x: origin, y: origin, width: side, height: side))  // vector: sharp at every size
+    image.draw(in: NSRect(x: origin, y: origin, width: side, height: side))
     NSGraphicsContext.restoreGraphicsState()
     return rep
 }
 
 func png(_ rep: NSBitmapImageRep) -> Data { rep.representation(using: .png, properties: [:])! }
 
-// macOS: the sizes iconutil expects
+// macOS: the sizes iconutil expects. The Icon Composer render fills its canvas edge to edge; on the
+// macOS icon grid the shape is 824 px of 1024, leaving room for the shadow.
 let iconset = URL(fileURLWithPath: arguments[2], isDirectory: true)
 try FileManager.default.createDirectory(at: iconset, withIntermediateDirectories: true)
 for points in [16, 32, 128, 256, 512] {
-    try png(render(macImage, points)).write(to: iconset.appendingPathComponent("icon_\(points)x\(points).png"))
-    try png(render(macImage, points * 2)).write(to: iconset.appendingPathComponent("icon_\(points)x\(points)@2x.png"))
+    for (scale, suffix) in [(1, ""), (2, "@2x")] {
+        let rep = render(macImage, points * scale, zoom: 824.0 / 1024.0, shadow: true)
+        try png(rep).write(to: iconset.appendingPathComponent("icon_\(points)x\(points)\(suffix).png"))
+    }
 }
 
 // Windows: 32-bit DIB entries for the small sizes, PNG for 256 px
