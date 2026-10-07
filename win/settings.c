@@ -27,7 +27,7 @@
 #endif
 #define BACKDROP_MICA 2
 
-#define APP_VERSION L"1.0"
+#define APP_VERSION L"1.0.1"
 #define MAX_ROWS 8
 #define MAX_MONITORS 8
 #define MAX_CARDS 8

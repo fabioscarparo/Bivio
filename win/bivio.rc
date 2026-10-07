@@ -11,8 +11,8 @@ CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "bivio.manifest"
 // Version shown in the file's Properties. Keep in sync with APP_VERSION in settings.c and with
 // CFBundleShortVersionString in mac/Info.plist.
 VS_VERSION_INFO VERSIONINFO
-FILEVERSION 1,0,0,0
-PRODUCTVERSION 1,0,0,0
+FILEVERSION 1,0,1,0
+PRODUCTVERSION 1,0,1,0
 FILEOS VOS_NT_WINDOWS32
 FILETYPE VFT_APP
 BEGIN
@@ -21,11 +21,11 @@ BEGIN
     BLOCK "040904B0"  // US English, Unicode
     BEGIN
       VALUE "FileDescription", "Bivio - monitor input switcher"
-      VALUE "FileVersion", "1.0.0"
+      VALUE "FileVersion", "1.0.1"
       VALUE "LegalCopyright", "Copyright (c) 2026 Fabio Scarparo. MIT License."
       VALUE "OriginalFilename", "Bivio.exe"
       VALUE "ProductName", "Bivio"
-      VALUE "ProductVersion", "1.0.0"
+      VALUE "ProductVersion", "1.0.1"
     END
   END
   BLOCK "VarFileInfo"
