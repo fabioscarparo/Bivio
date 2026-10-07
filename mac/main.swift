@@ -20,6 +20,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
     private let popover = NSPopover()
     private let model = PopoverModel()
     private var outsideClickMonitor: Any?
+    /// The app that was frontmost when the popover opened, to give the focus back to when it closes.
+    private var previousApp: NSRunningApplication?
     private var config = Config.load()
     private var hotKeyRef: EventHotKeyRef?
     private var registeredHotkey: Hotkey?
@@ -77,6 +79,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
         model.load(config: config, monitors: ExternalDisplay.all().map { ($0.name, $0.pnpID) },
                    launchAtLogin: SMAppService.mainApp.status == .enabled, hotkeyUnavailable: hotkeyError)
         model.page = page
+        let frontmost = NSWorkspace.shared.frontmostApplication
+        previousApp = frontmost?.processIdentifier == ProcessInfo.processInfo.processIdentifier ? nil : frontmost
         NSApp.activate()  // a menu bar app must be active for the settings text fields to take keyboard focus
         popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
         // .transient only sees clicks inside this app: also close on clicks in other apps or the desktop.
@@ -89,9 +93,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
         if let outsideClickMonitor { NSEvent.removeMonitor(outsideClickMonitor) }
         outsideClickMonitor = nil
         model.page = .inputs
-        // We activated the app to show the popover: give the focus back to the app the user was in.
+        // Showing or clicking the popover makes Bivio the active app: give the focus back to the app the user
+        // was in. Not with NSApp.hide: from a hidden app, the next popover closes at the second click in it.
         // If the popover closed because the user clicked another app, that app is already active.
-        if NSApp.isActive { NSApp.hide(nil) }
+        if NSApp.isActive, let previousApp, !previousApp.isTerminated {
+            previousApp.activate(from: .current, options: [])
+        }
+        previousApp = nil
     }
 
     /// Shows a native menu under the icon. Assigning `statusItem.menu` makes the next click open it,
