@@ -190,7 +190,7 @@ private struct InputsPage: View {
     }
 }
 
-/// A Control Center–style tile: rounded fill that brightens on hover. A keyboard badge marks the
+/// A Control Center-style tile: rounded fill that brightens on hover. A keyboard badge marks the
 /// input the shortcut switches to.
 private struct InputTile: View {
     let name: String

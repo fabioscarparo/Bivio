@@ -3,17 +3,19 @@
 #   make mac      build/Bivio.app  (Xcode command line tools: swiftc, codesign)
 #   make win      build/Bivio.exe  (MinGW-w64 cross compiler: brew install mingw-w64)
 #   make all      both
+#   make dmg      build/Bivio.dmg, the drag-to-install disk image of the Mac app
 #   make preview  renders the macOS popover pages to build/popover-*.png, to check the layout
 #   make icons    regenerates mac/AppIcon.icns and win/bivio.ico from assets/ (needs Icon Composer)
 #   make clean    removes build/
 
 APP     := build/Bivio.app
 EXE     := build/Bivio.exe
+DMG     := build/Bivio.dmg
 WIN_CC  := x86_64-w64-mingw32-gcc
 WINDRES := x86_64-w64-mingw32-windres
 ICTOOL  := "/Applications/Icon Composer.app/Contents/Executables/ictool"
 
-.PHONY: all mac win preview icons clean
+.PHONY: all mac win dmg preview icons clean
 
 all: mac win
 
@@ -28,6 +30,12 @@ $(APP): mac/*.swift mac/Bridge.h mac/Info.plist mac/AppIcon.icns
 	swiftc -O -target arm64-apple-macos14.0 -import-objc-header mac/Bridge.h \
 		mac/*.swift -o $(APP)/Contents/MacOS/Bivio
 	codesign --force --sign - $(APP)
+
+dmg: $(DMG)
+
+# Background and layout made with dmgly; see tools/make_dmg.sh. The first run asks to allow controlling Finder.
+$(DMG): $(APP) assets/dmg-background.png mac/AppIcon.icns tools/make_dmg.sh
+	tools/make_dmg.sh $(APP) assets/dmg-background.png mac/AppIcon.icns $@
 
 win: $(EXE)
 
